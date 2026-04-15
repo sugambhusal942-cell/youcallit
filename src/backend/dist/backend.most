@@ -1,0 +1,151 @@
+// Version: 1.0.0
+type ChatMessage__559859432 =
+  {
+    content : Text;
+    id : Nat;
+    isRead : Bool;
+    orderId : ?Nat;
+    reservationId : ?Nat;
+    senderId : UserId__158757552;
+    senderRole : SenderRole__686235296;
+    timestamp : Timestamp__301639476
+  };
+type ChatThread__377818600 =
+  {
+    customerId : UserId__158757552;
+    id : Nat;
+    isOpen : Bool;
+    lastActivity : Timestamp__301639476;
+    messages : [ChatMessage__559859432];
+    orderId : Nat
+  };
+type CustomerProfile__202106736 =
+  {
+    dietaryPreferences : [DietaryTag__993186424];
+    email : Text;
+    favoriteItems : [Nat];
+    id : UserId__158757552;
+    name : Text;
+    phone : Text
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type DietaryTag__993186424 =
+  {#chefsSpecial; #glutenFree; #spicy; #vegan; #vegetarian};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type MenuCategory__447177382 =
+  {description : Text; emoji : Text; id : Nat; name : Text};
+type MenuItem__25360883 =
+  {
+    calories : ?Nat;
+    categoryId : Nat;
+    description : Text;
+    id : Nat;
+    imageUrl : Text;
+    isAvailable : Bool;
+    isPopular : Bool;
+    name : Text;
+    price : Nat;
+    tags : [DietaryTag__993186424]
+  };
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type OrderItem__241319351 =
+  {menuItemId : Nat; quantity : Nat; specialInstructions : Text};
+type OrderStatus__272730104 =
+  {#cancelled; #completed; #confirmed; #pending; #preparing; #ready};
+type OrderType__209401566 = {#dineIn; #takeout};
+type Order__141779993 =
+  {
+    createdAt : Timestamp__301639476;
+    customerId : UserId__158757552;
+    id : Nat;
+    items : [OrderItem__241319351];
+    orderType : OrderType__209401566;
+    specialInstructions : Text;
+    status : OrderStatus__272730104;
+    subtotal : Nat;
+    tableNumber : ?Nat;
+    tax : Nat;
+    total : Nat
+  };
+type ReservationStatus__338415175 = {#cancelled; #confirmed; #pending};
+type Reservation__811982310 =
+  {
+    customerId : UserId__158757552;
+    customerName : Text;
+    date : Text;
+    email : Text;
+    guestCount : Nat;
+    id : Nat;
+    notes : ?Text;
+    phone : Text;
+    specialOccasion : ?Text;
+    status : ReservationStatus__338415175;
+    tableId : Nat;
+    time : Text
+  };
+type SenderRole__686235296 = {#chef; #customer};
+type TableStatus__472908611 =
+  {#available; #maintenance; #occupied; #reserved};
+type Table__225699969 =
+  {
+    capacity : Nat;
+    id : Nat;
+    number : Nat;
+    status : TableStatus__472908611;
+    x : Nat;
+    y : Nat
+  };
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+actor {
+  stable chatThreads :
+    {
+      var root : Node__46230540<Nat, ChatThread__377818600>;
+      var size : Nat__490723111
+    };
+  stable menuCategories :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?MenuCategory__447177382]];
+      var elementIndex : Nat__490723111
+    };
+  stable menuItems :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?MenuItem__25360883]];
+      var elementIndex : Nat__490723111
+    };
+  stable nextChatIds : [var Nat];
+  stable nextMenuIds : [var Nat];
+  stable nextOrderIds : [var Nat];
+  stable nextReservationIds : [var Nat];
+  stable orders :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Order__141779993]];
+      var elementIndex : Nat__490723111
+    };
+  stable profiles :
+    {
+      var root : Node__46230540<UserId__158757552, CustomerProfile__202106736>;
+      var size : Nat__490723111
+    };
+  stable reservations :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Reservation__811982310]];
+      var elementIndex : Nat__490723111
+    };
+  stable tables :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Table__225699969]];
+      var elementIndex : Nat__490723111
+    }
+};

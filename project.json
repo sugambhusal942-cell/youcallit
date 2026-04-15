@@ -1,0 +1,21 @@
+{
+  "overview": "youCallIT is a premium restaurant web experience featuring a stunning 3D animated menu, seamless food ordering, table reservations with interactive floor plans, and live chef chat for real-time customizations — all in one beautifully crafted platform.",
+  "features": [
+    "3D animated menu with product showcase",
+    "Food ordering with cart and checkout",
+    "Table reservations with interactive floor plan",
+    "Live chef chat for order modifications",
+    "Admin dashboard for orders, reservations, and menu management",
+    "Customer login and order history via Internet Identity"
+  ],
+  "category": "food-restaurant",
+  "tags": [
+    "restaurant",
+    "food-ordering",
+    "reservations",
+    "3d-animations",
+    "chef-chat",
+    "menu"
+  ],
+  "last_updated": "2026-04-15T17:19:47.776Z"
+}

@@ -1,0 +1,185 @@
+type UserId = principal;
+type Timestamp = int;
+type TableStatus = 
+ variant {
+   available;
+   maintenance;
+   occupied;
+   "reserved";
+ };
+type Table = 
+ record {
+   capacity: nat;
+   id: nat;
+   number: nat;
+   status: TableStatus;
+   x: nat;
+   y: nat;
+ };
+type SenderRole = 
+ variant {
+   chef;
+   customer;
+ };
+type ReservationStatus = 
+ variant {
+   cancelled;
+   confirmed;
+   pending;
+ };
+type Reservation = 
+ record {
+   customerId: UserId;
+   customerName: text;
+   date: text;
+   email: text;
+   guestCount: nat;
+   id: nat;
+   notes: opt text;
+   phone: text;
+   specialOccasion: opt text;
+   status: ReservationStatus;
+   tableId: nat;
+   time: text;
+ };
+type OrderType = 
+ variant {
+   dineIn;
+   takeout;
+ };
+type OrderStatus = 
+ variant {
+   cancelled;
+   completed;
+   confirmed;
+   pending;
+   preparing;
+   ready;
+ };
+type OrderItem = 
+ record {
+   menuItemId: nat;
+   quantity: nat;
+   specialInstructions: text;
+ };
+type Order = 
+ record {
+   createdAt: Timestamp;
+   customerId: UserId;
+   id: nat;
+   items: vec OrderItem;
+   orderType: OrderType;
+   specialInstructions: text;
+   status: OrderStatus;
+   subtotal: nat;
+   tableNumber: opt nat;
+   tax: nat;
+   total: nat;
+ };
+type MenuItem = 
+ record {
+   calories: opt nat;
+   categoryId: nat;
+   description: text;
+   id: nat;
+   imageUrl: text;
+   isAvailable: bool;
+   isPopular: bool;
+   name: text;
+   price: nat;
+   tags: vec DietaryTag;
+ };
+type MenuCategory = 
+ record {
+   description: text;
+   emoji: text;
+   id: nat;
+   name: text;
+ };
+type DietaryTag = 
+ variant {
+   chefsSpecial;
+   glutenFree;
+   spicy;
+   vegan;
+   vegetarian;
+ };
+type CustomerProfile = 
+ record {
+   dietaryPreferences: vec DietaryTag;
+   email: text;
+   favoriteItems: vec nat;
+   id: UserId;
+   name: text;
+   phone: text;
+ };
+type ChatThread = 
+ record {
+   customerId: UserId;
+   id: nat;
+   isOpen: bool;
+   lastActivity: Timestamp;
+   messages: vec ChatMessage;
+   orderId: nat;
+ };
+type ChatMessage = 
+ record {
+   content: text;
+   id: nat;
+   isRead: bool;
+   orderId: opt nat;
+   reservationId: opt nat;
+   senderId: UserId;
+   senderRole: SenderRole;
+   timestamp: Timestamp;
+ };
+service : {
+  addFavoriteItem: (menuItemId: nat) -> (bool);
+  addMenuCategory: (name: text, description: text, emoji: text) ->
+   (MenuCategory);
+  addMenuItem: (categoryId: nat, name: text, description: text, price: 
+   nat, imageUrl: text, tags: vec DietaryTag, calories: opt nat) ->
+   (MenuItem);
+  cancelOrder: (id: nat) -> (bool);
+  cancelReservation: (id: nat) -> (bool);
+  deleteMenuItem: (id: nat) -> (bool);
+  getAllCustomers: () -> (vec CustomerProfile);
+  getAllOpenThreads: () -> (vec ChatThread);
+  getAllOrders: () -> (vec Order);
+  getAllReservations: () -> (vec Reservation);
+  getAllTables: () -> (vec Table) query;
+  getAvailableTables: (date: text, time: text, guestCount: nat) ->
+   (vec Table) query;
+  getCustomerOrders: () -> (vec Order);
+  getCustomerReservations: () -> (vec Reservation);
+  getMenuCategories: () -> (vec MenuCategory) query;
+  getMenuItem: (id: nat) -> (opt MenuItem) query;
+  getMenuItems: () -> (vec MenuItem) query;
+  getMenuItemsByCategory: (categoryId: nat) -> (vec MenuItem) query;
+  getMyProfile: () -> (opt CustomerProfile);
+  getNewMessages: (threadId: nat, lastMessageId: nat) ->
+   (vec ChatMessage) query;
+  getOrder: (id: nat) -> (opt Order) query;
+  getOrdersByStatus: (status: OrderStatus) -> (vec Order);
+  getReservation: (id: nat) -> (opt Reservation) query;
+  getThread: (threadId: nat) -> (opt ChatThread) query;
+  getThreadByOrder: (orderId: nat) -> (opt ChatThread) query;
+  makeReservation: (tableId: nat, guestCount: nat, date: text, time: 
+   text, customerName: text, phone: text, email: text, specialOccasion:
+   opt text, notes: opt text) -> (Reservation);
+  markMessagesRead: (threadId: nat) -> (bool);
+  modifyReservation: (updated: Reservation) -> (bool);
+  placeOrder: (items: vec OrderItem, orderType: OrderType,
+   specialInstructions: text, tableNumber: opt nat) -> (Order);
+  removeFavoriteItem: (menuItemId: nat) -> (bool);
+  searchMenuItems: (searchTerm: text) -> (vec MenuItem) query;
+  sendChefMessage: (orderId: nat, content: text) -> (ChatMessage);
+  sendMessage: (orderId: nat, content: text) -> (ChatMessage);
+  toggleItemAvailability: (id: nat) -> (bool);
+  updateMenuItem: (item: MenuItem) -> (bool);
+  updateOrderStatus: (id: nat, status: OrderStatus) -> (bool);
+  updateProfile: (name: text, phone: text, email: text, dietaryPreferences:
+   vec DietaryTag) -> (CustomerProfile);
+  updateReservationStatus: (id: nat, status: ReservationStatus) -> (bool);
+  updateTableStatus: (id: nat, status: TableStatus) -> (bool);
+}
